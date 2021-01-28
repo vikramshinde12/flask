@@ -1,0 +1,1287 @@
+{
+	"info": {
+		"_postman_id": "8f128b08-77a1-421b-8f84-76974eec15b3",
+		"name": "Items",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Success Message\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"User created successfully.\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+							"    console.log(response.json());",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"Vikram\",\n    \"password\": \"Password\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/register Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Duplicate Register Status Code\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Duplicate Response\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Username Vikram already exists\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"Vikram\",\n    \"password\": \"Password\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Test Access Token Not Empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access_token).not.eq(undefined);",
+							"});",
+							"",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"jwt_token\", jsonData.access_token);",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"Vikram\",\n    \"password\": \"Password\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/store/<name>",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"The Store Morrisons added successfully.\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"Morrisons\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/store/Morrisons",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"store",
+						"Morrisons"
+					]
+				},
+				"description": "Store post\n# name\nChange the host name"
+			},
+			"response": [
+				{
+					"name": "/items mock",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://2f99b511-d66d-4fb1-88d9-9d59373231fa.mock.pstmn.io/items",
+							"protocol": "https",
+							"host": [
+								"2f99b511-d66d-4fb1-88d9-9d59373231fa",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "100"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.7.5"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 27 Jan 2021 09:51:23 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"items\": [\n        {\n            \"name\": \"sofa\",\n            \"price\": 99.99\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "/store/<name>",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"Morrisons\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/store/Morrisons",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"store",
+						"Morrisons"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": [
+				{
+					"name": "/items mock",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://2f99b511-d66d-4fb1-88d9-9d59373231fa.mock.pstmn.io/items",
+							"protocol": "https",
+							"host": [
+								"2f99b511-d66d-4fb1-88d9-9d59373231fa",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "100"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.7.5"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 27 Jan 2021 09:51:23 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"items\": [\n        {\n            \"name\": \"sofa\",\n            \"price\": 99.99\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "/item/<name>",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"response check\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"chair\");",
+							"    pm.expect(jsonData.price).to.eql(11.99);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"price\": 11.99,\n\"store_id\": 1}"
+				},
+				"url": {
+					"raw": "{{url}}/item/chair",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"chair"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": []
+		},
+		{
+			"name": "/item/<name> without store_id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400 Bad Request\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"response check\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message.store_id).to.eql(\"Every Item needs a store id.\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"price\": 11.99}"
+				},
+				"url": {
+					"raw": "{{url}}/item/chair",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"chair"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": []
+		},
+		{
+			"name": "/item/<name> Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Duplicate Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"response check\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"item chair already exists\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"price\": 11.99,\n\"store_id\": 2\n}"
+				},
+				"url": {
+					"raw": "{{url}}/item/chair",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"chair"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": []
+		},
+		{
+			"name": "/item/<name>",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"  ",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check The response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"chair\");",
+							"    pm.expect(jsonData.price).to.eql(11.99);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "JWT {{jwt_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/item/chair",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"chair"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": [
+				{
+					"name": "test_get",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "JWT {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://1b4db295-fd62-411c-9cbc-774d38e56726.mock.pstmn.io/item/chair",
+							"protocol": "https",
+							"host": [
+								"1b4db295-fd62-411c-9cbc-774d38e56726",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"item",
+								"chair"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "44"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.7.5"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 27 Jan 2021 10:52:12 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\": \"chair\",\n    \"price\": 1000\n}"
+				}
+			]
+		},
+		{
+			"name": "/item/<name> Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"  ",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Check The response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Not Found\");    ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "JWT {{jwt_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/item/chair2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"chair2"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": []
+		},
+		{
+			"name": "/item/<name>",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"price\": 99.99,\n\"store_id\": 1}"
+				},
+				"url": {
+					"raw": "{{url}}/item/chair",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"chair"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/item/<name> Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"price\": 99.99,\n\"store_id\": 1}"
+				},
+				"url": {
+					"raw": "{{url}}/item/sofa",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"sofa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/items",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.items[0].name).to.eql(\"chair\");",
+							"    pm.expect(jsonData.items[0].price).to.eql(99.99);",
+							"    pm.expect(jsonData.items[1].name).to.eql(\"sofa\");",
+							"    pm.expect(jsonData.items[1].price).to.eql(99.99);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/items",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"items"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": []
+		},
+		{
+			"name": "/item/<name>",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/item/chair",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"chair"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": []
+		},
+		{
+			"name": "/item/<name> Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"item chair3 does not exists\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/item/chair3",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"chair3"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": []
+		},
+		{
+			"name": "/items Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.items[0].name).to.eql(\"sofa\");",
+							"    pm.expect(jsonData.items[0].price).to.eql(99.99);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/items",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"items"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": [
+				{
+					"name": "/items mock",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://2f99b511-d66d-4fb1-88d9-9d59373231fa.mock.pstmn.io/items",
+							"protocol": "https",
+							"host": [
+								"2f99b511-d66d-4fb1-88d9-9d59373231fa",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "100"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.7.5"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 27 Jan 2021 09:51:23 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"items\": [\n        {\n            \"name\": \"sofa\",\n            \"price\": 99.99\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "/store/<name>",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Store deleted\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/store/Morrisons",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"store",
+						"Morrisons"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": [
+				{
+					"name": "/items mock",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://2f99b511-d66d-4fb1-88d9-9d59373231fa.mock.pstmn.io/items",
+							"protocol": "https",
+							"host": [
+								"2f99b511-d66d-4fb1-88d9-9d59373231fa",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "100"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.7.5"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 27 Jan 2021 09:51:23 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"items\": [\n        {\n            \"name\": \"sofa\",\n            \"price\": 99.99\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "/store/<name> Not Exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Store does not exists\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/store/Morrisons",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"store",
+						"Morrisons"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": [
+				{
+					"name": "/items mock",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://2f99b511-d66d-4fb1-88d9-9d59373231fa.mock.pstmn.io/items",
+							"protocol": "https",
+							"host": [
+								"2f99b511-d66d-4fb1-88d9-9d59373231fa",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "100"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.7.5"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 27 Jan 2021 09:51:23 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"items\": [\n        {\n            \"name\": \"sofa\",\n            \"price\": 99.99\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "/stores",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.stores).to.eql([]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/stores",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"stores"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": [
+				{
+					"name": "/items mock",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://2f99b511-d66d-4fb1-88d9-9d59373231fa.mock.pstmn.io/items",
+							"protocol": "https",
+							"host": [
+								"2f99b511-d66d-4fb1-88d9-9d59373231fa",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "100"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.7.5"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 27 Jan 2021 09:51:23 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"items\": [\n        {\n            \"name\": \"sofa\",\n            \"price\": 99.99\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "/items mock",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.items[0].name).to.eql(\"sofa\");",
+							"    pm.expect(jsonData.items[0].price).to.eql(99.99);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://2f99b511-d66d-4fb1-88d9-9d59373231fa.mock.pstmn.io/items",
+					"protocol": "https",
+					"host": [
+						"2f99b511-d66d-4fb1-88d9-9d59373231fa",
+						"mock",
+						"pstmn",
+						"io"
+					],
+					"path": [
+						"items"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": [
+				{
+					"name": "/items Copy",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/items",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"items"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		}
+	]
+}
