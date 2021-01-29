@@ -8,3 +8,10 @@ This is executing on `MySQL` Docker container
 
 change the config variable SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@127.17.0.1:3306/api'
+
+This needs to create database called api in mysql
+
+1. Connect mysql
+`mysql -h 127.17.0.1 --port 3306 -u user -p`
+2. Create database
+`CREATE DATABASE api`
