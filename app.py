@@ -16,8 +16,8 @@ app = Flask(__name__)
 app.secret_key = 'jose'
 app.config['JWT_AUTH_URL_RULE'] = '/login'
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=1800)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost:3306/api'
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@127.17.0.1:3306/api'
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 # app.config['JWT_AUTH_USERNAME_KEY'] = 'email'
 
