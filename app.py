@@ -9,6 +9,7 @@ from security import authenticate, identity
 from resources.user import UserRegister
 from resources.item import Item, ItemList
 from resources.store import Store, StoreList
+from resources.cleanup import Cleanup
 from db import db
 
 app = Flask(__name__)
@@ -16,6 +17,7 @@ app.secret_key = 'jose'
 app.config['JWT_AUTH_URL_RULE'] = '/login'
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=1800)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost:3306/api'
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 # app.config['JWT_AUTH_USERNAME_KEY'] = 'email'
 
@@ -29,6 +31,12 @@ api.add_resource(ItemList, '/items')
 api.add_resource(UserRegister, '/register')
 api.add_resource(Store, '/store/<string:name>')
 api.add_resource(StoreList, '/stores')
+api.add_resource(Cleanup, '/cleanup')
+
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 
 @jwt.jwt_error_handler
