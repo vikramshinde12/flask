@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt import JWT
@@ -13,18 +15,14 @@ app = Flask(__name__)
 app.secret_key = 'jose'
 app.config['JWT_AUTH_URL_RULE'] = '/login'
 app.config['JWT_EXPIRATION_DELTA'] = timedelta(seconds=1800)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 # app.config['JWT_AUTH_USERNAME_KEY'] = 'email'
-
-@app.before_first_request
-def create_table():
-    db.create_all()
 
 
 api = Api(app)
 
-jwt = JWT(app, authenticate, identity) # /auth
+jwt = JWT(app, authenticate, identity) # generates /auth automatically
 
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
