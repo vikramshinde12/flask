@@ -33,6 +33,7 @@ class ItemModel(db.Model):
             db.session.commit()
         except Exception as e:
             print(f'error: {e}')
+            # raise ValueError("Cannot add items")
 
     def delete_from_db(self):
         db.session.delete(self)

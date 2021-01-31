@@ -20,8 +20,8 @@ class StoreModel(db.Model):
 
     @classmethod
     def find_by_name(cls, name):
-        item = cls.query.filter_by(name=name).first()
-        return item
+        store = cls.query.filter_by(name=name).first()
+        return store
 
     def save_to_db(self):
         try:
