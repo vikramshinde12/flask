@@ -1,5 +1,3 @@
-import os
-
 from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
@@ -40,7 +38,6 @@ def create_tables():
 
 @jwt.user_claims_loader
 def add_identity_to_claims(identity):
-    print(f'identity : {identity}')
     if identity == 1: #Instead of hard coding, read from config file or database.
         return {'is_admin': True}
     return {'is_admin': False}

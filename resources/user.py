@@ -1,4 +1,3 @@
-import sqlite3
 from flask_restful import Resource, reqparse
 from werkzeug.security import safe_str_cmp
 from flask_jwt_extended import create_access_token, \
@@ -27,9 +26,7 @@ class UserRegister(Resource):
             return {"message": f"Username {data['username']} already exists"}, 400
 
         user = UserModel(**data)
-        print(f'before creating user {user}')
         user.save_to_db()
-        print(f'after creating user {user}')
 
         return {"message": "User created successfully."}, 201
 
@@ -46,14 +43,10 @@ class User(Resource):
     @jwt_required
     def delete(cls, user_id):
         claims = get_jwt_claims()
-        print(claims)
-        print(user_id)
         if claims['is_admin']:
             return {'message': "Admin can not be deleted"}, 400
         user = UserModel.find_by_id(user_id)
-        print(f'de;ete user {user}')
         if not user:
-            print('im here')
             return {'message': 'User not found'}, 404
         user.delete_from_db()
         return {'message': 'User deleted'}, 200
