@@ -27,9 +27,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
-							"    console.log(response.json());",
-							"});"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -106,6 +104,130 @@
 		},
 		{
 			"name": "/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Test Access Token Not Empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access_token).not.eq(undefined);",
+							"});",
+							"",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"jwt_token\", jsonData.access_token);",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"Vikram\",\n    \"password\": \"Password\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Test Access Token Not Empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Successfully logged out\");",
+							"});",
+							"",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"jwt_token\", jsonData.access_token);",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"Vikram\",\n    \"password\": \"Password\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/logout",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/login Copy 2",
 			"event": [
 				{
 					"listen": "test",
@@ -364,6 +486,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -411,6 +543,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -438,7 +580,7 @@
 			"response": []
 		},
 		{
-			"name": "/item/<name> Copy",
+			"name": "/item/<name> Duplicate",
 			"event": [
 				{
 					"listen": "test",
@@ -458,6 +600,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -517,7 +669,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "JWT {{jwt_token}}",
+						"value": "Bearer {{jwt_token}}",
 						"type": "text"
 					}
 				],
@@ -587,7 +739,7 @@
 			]
 		},
 		{
-			"name": "/item/<name> Copy",
+			"name": "/item/<name> Not Found",
 			"event": [
 				{
 					"listen": "test",
@@ -619,7 +771,7 @@
 					{
 						"key": "Authorization",
 						"type": "text",
-						"value": "JWT {{jwt_token}}"
+						"value": "Bearer {{jwt_token}}"
 					}
 				],
 				"url": {
@@ -748,6 +900,55 @@
 							"",
 							"pm.test(\"Check the response\", function () {",
 							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.items[0]).to.eql(\"chair\");",
+							"    pm.expect(jsonData.items[1]).to.eql(\"sofa\");",
+							"});",
+							"",
+							"pm.test(\"Check the response message\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"More data available if you log in.\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/items",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"items"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": []
+		},
+		{
+			"name": "/items with login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.items[0].name).to.eql(\"chair\");",
 							"    pm.expect(jsonData.items[0].price).to.eql(99.99);",
 							"    pm.expect(jsonData.items[1].name).to.eql(\"sofa\");",
@@ -759,6 +960,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -795,6 +1006,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [
 					{
@@ -822,7 +1043,7 @@
 			"response": []
 		},
 		{
-			"name": "/item/<name> Copy",
+			"name": "/item/<name> Not Exists",
 			"event": [
 				{
 					"listen": "test",
@@ -847,6 +1068,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "DELETE",
 				"header": [
 					{
@@ -900,6 +1131,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -956,6 +1197,49 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"items\": [\n        {\n            \"name\": \"sofa\",\n            \"price\": 99.99\n        }\n    ]\n}"
+				},
+				{
+					"name": "/get_items",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://aa2c10bb-51e9-41c2-854c-a3fe73f77451.mock.pstmn.io/get_items",
+							"protocol": "https",
+							"host": [
+								"aa2c10bb-51e9-41c2-854c-a3fe73f77451",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"get_items"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 204,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "177"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/1.0.1 Python/3.7.5"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 29 Jan 2021 12:12:24 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"items\": [\n        {\n            \"name\": \"sofa\",\n            \"price\": 99.99\n        },\n        {\n            \"name\": \"chair\",\n            \"price\": 11.99\n        }\n    ]\n}"
 				}
 			]
 		},
@@ -1227,7 +1511,7 @@
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"pm.test(\"Response time is less than 100ms\", function () {",
+							"pm.test.skip(\"Response time is less than 100ms\", function () {",
 							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
 							"});",
 							"",
@@ -1262,6 +1546,89 @@
 			},
 			"response": [
 				{
+					"name": "/items mock",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://0f6b3e20-1bf8-47a4-9aa9-15e8c14f8c92.mock.pstmn.io/items2",
+							"protocol": "https",
+							"host": [
+								"0f6b3e20-1bf8-47a4-9aa9-15e8c14f8c92",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"items2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Fri, 29 Jan 2021 12:15:47 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Server",
+							"value": "nginx"
+						},
+						{
+							"key": "x-srv-trace",
+							"value": "v=1;t=93953d6b0eb95f7e"
+						},
+						{
+							"key": "x-srv-span",
+							"value": "v=1;s=93e1e14daf7e3c82"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "X-RateLimit-Limit",
+							"value": "120"
+						},
+						{
+							"key": "X-RateLimit-Remaining",
+							"value": "119"
+						},
+						{
+							"key": "X-RateLimit-Reset",
+							"value": "1611922607"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"63-IAISa2yQ12rsY1vtgSCZHA5ilsU\""
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"items\": [\n        {\n            \"name\": \"sofa\",\n            \"price\": 1111\n        }\n    ]\n}"
+				},
+				{
 					"name": "/items Copy",
 					"originalRequest": {
 						"method": "GET",
@@ -1282,6 +1649,712 @@
 					"body": null
 				}
 			]
+		},
+		{
+			"name": "/user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(1);",
+							"    pm.expect(jsonData.username).to.eql(\"Vikram\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/user/1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user Admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Admin can not be deleted\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/user/1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/register User2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Success Message\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"User created successfully.\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"User2\",\n    \"password\": \"Password\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"register"
+					]
+				},
+				"description": "This is to test Claims"
+			},
+			"response": []
+		},
+		{
+			"name": "/login Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Test Access Token Not Empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access_token).not.eq(undefined);",
+							"});",
+							"",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"jwt_token\", jsonData.access_token);",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"User2\",\n    \"password\": \"Password\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user User2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"User deleted\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/user/2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user Not Found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"User not found\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/user/2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/login Invalid credentials",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Test Access Token Not Empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).eq(\"Invalid credentials\");",
+							"});",
+							"",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"jwt_token\", jsonData.access_token);",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"User2\",\n    \"password\": \"Password\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/register User3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Success Message\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"User created successfully.\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"User3\",\n    \"password\": \"Password\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"register"
+					]
+				},
+				"description": "This is to test Claims"
+			},
+			"response": []
+		},
+		{
+			"name": "/user User3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Check the response\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(2);",
+							"    pm.expect(jsonData.username).to.eql(\"User3\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/user/2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/login User3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Test Access Token Not Empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access_token).not.eq(undefined);",
+							"});",
+							"",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"refresh_token\", jsonData.refresh_token);",
+							"pm.environment.set(\"jwt_token\", jsonData.access_token);",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"User3\",\n    \"password\": \"Password\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/item/<name> by Non-Admin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 100ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(100);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Test Access Token Not Empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.message).to.eql(\"Admin privilege required.\");",
+							"    ",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/item/sofa",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"sofa"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}/refresh",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Test Access Token Not Empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.access_token).not.eq(undefined);",
+							"});",
+							"",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"jwt_token\", jsonData.access_token);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{refresh_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/refresh",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/item/<name> fresh token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"response check\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.error).to.eql(\"fresh_token_required\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"price\": 11.99,\n\"store_id\": 1}"
+				},
+				"url": {
+					"raw": "{{url}}/item/chair",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"item",
+						"chair"
+					]
+				},
+				"description": "This should return Student name\n\n# name\nChange the host name"
+			},
+			"response": []
+		},
+		{
+			"name": "{{url}}/cleanup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/cleanup",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"cleanup"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

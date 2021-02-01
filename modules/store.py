@@ -16,12 +16,20 @@ class StoreModel(db.Model):
         return f"ItemModel(name:{self.name}, items: {self.items})"
 
     def json(self):
-        return {'name': self.name, 'items': [item.json() for item in self.items.all()]}
+        return {
+            'id': self.id,
+            'name': self.name,
+            'items': [item.json() for item in self.items.all()]
+        }
 
     @classmethod
     def find_by_name(cls, name):
         store = cls.query.filter_by(name=name).first()
         return store
+
+    @classmethod
+    def find_all(cls):
+        return cls.query.all()
 
     def save_to_db(self):
         try:
