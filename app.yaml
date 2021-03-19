@@ -1,0 +1,7 @@
+runtime: python38
+
+env_variables:
+  CLOUD_SQL_USERNAME: 'root'
+  CLOUD_SQL_PASSWORD: 'password'
+  CLOUD_SQL_DATABASE_NAME: 'api'
+  CLOUD_SQL_CONNECTION_NAME: 'flask-demo-11:europe-west2:store'
