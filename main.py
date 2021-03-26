@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from datetime import timedelta
@@ -24,17 +25,28 @@ app.config['PROPAGATE_EXCEPTION'] = True #propogate the jwt-exception
 app.config['JWT_SECRET_KEY'] = 'vikramshinde-secret'
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+app.config['CORS_HEADERS'] = 'Content-Type'
 
-
+CORS(app)
 api = Api(app)
 
 # jwt = JWT(app, authenticate, identity) # generates /auth automatically
 jwt = JWTManager(app)
 db.init_app(app)
 
+
 @app.before_first_request
 def create_tables():
     db.create_all()
+
+
+# @app.after_request
+# def after_request():
+#     response = make_response()
+#     response.headers.add("Access-Control-Allow-Origin", "*")
+#     response.headers.add('Access-Control-Allow-Headers', "*")
+#     response.headers.add('Access-Control-Allow-Methods', "*")
+#     return response
 
 
 @jwt.user_claims_loader

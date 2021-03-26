@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../.idea/Learnings.iml" filepath="$PROJECT_DIR$/../.idea/Learnings.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/flask-udemy.iml" filepath="$PROJECT_DIR$/.idea/flask-udemy.iml" />
       <module fileurl="file://$PROJECT_DIR$/../jml-behave/.idea/jml-behave.iml" filepath="$PROJECT_DIR$/../jml-behave/.idea/jml-behave.iml" />
     </modules>
